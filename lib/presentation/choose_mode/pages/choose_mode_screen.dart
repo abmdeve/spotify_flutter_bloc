@@ -3,6 +3,7 @@ import 'dart:ui';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:spotify_flutter_bloc/presentation/auth/pages/signup_or_sign_in_screen.dart';
 import 'package:spotify_flutter_bloc/presentation/choose_mode/theme/theme_cubit.dart';
 
 import '../../../common/widgets/button/basic_app_button.dart';
@@ -151,7 +152,7 @@ class ChooseModeScreen extends StatelessWidget {
                       Navigator.push(
                           context,
                           MaterialPageRoute(
-                            builder: (context) => const ChooseModeScreen(),
+                            builder: (context) => const SignupOrSignInScreen(),
                           ));
                     },
                     title: 'Continue'),

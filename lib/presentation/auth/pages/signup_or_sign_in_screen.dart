@@ -5,6 +5,7 @@ import 'package:spotify_flutter_bloc/common/widgets/appbar/basic_app_bar.dart';
 import 'package:spotify_flutter_bloc/common/widgets/button/basic_app_button.dart';
 import 'package:spotify_flutter_bloc/core/configs/assets/app_images.dart';
 import 'package:spotify_flutter_bloc/core/configs/assets/app_vectors.dart';
+import 'package:spotify_flutter_bloc/presentation/auth/pages/signup_screen.dart';
 
 import '../../../core/configs/theme/app_colors.dart';
 
@@ -73,7 +74,14 @@ class SignupOrSignInScreen extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: BasicAppButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignupScreen(),
+                              ),
+                            );
+                          },
                           title: "Register",
                         ),
                       ),
@@ -83,7 +91,14 @@ class SignupOrSignInScreen extends StatelessWidget {
                       Expanded(
                         flex: 1,
                         child: TextButton(
-                          onPressed: () {},
+                          onPressed: () {
+                            /*Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const SignupScreen(),
+                              ),
+                            );*/
+                          },
                           child: Text(
                             'Sign in',
                             style: TextStyle(

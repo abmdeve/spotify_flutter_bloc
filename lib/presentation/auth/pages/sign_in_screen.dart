@@ -3,10 +3,18 @@ import 'package:flutter_svg/svg.dart';
 import 'package:spotify_flutter_bloc/common/widgets/appbar/basic_app_bar.dart';
 import 'package:spotify_flutter_bloc/common/widgets/button/basic_app_button.dart';
 import 'package:spotify_flutter_bloc/core/configs/assets/app_vectors.dart';
+import 'package:spotify_flutter_bloc/data/models/auth/sign_in_user_request.dart';
+import 'package:spotify_flutter_bloc/domain/usecases/auth/sign_in.dart';
 import 'package:spotify_flutter_bloc/presentation/auth/pages/signup_screen.dart';
 
+import '../../../service_locator.dart';
+import '../../root/pages/root_screen.dart';
+
 class SignInScreen extends StatelessWidget {
-  const SignInScreen({super.key});
+  SignInScreen({super.key});
+
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +28,11 @@ class SignInScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+            vertical: 50,
+            horizontal: 30,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -40,7 +51,31 @@ class SignInScreen extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            BasicAppButton(onPressed: () {}, title: 'Sign In'),
+            BasicAppButton(
+                onPressed: () async {
+                  var response = await sl<SignInUseCase>().call(
+                    params: SignInUserRequest(
+                      email: _email.text.toString(),
+                      password: _password.text.toString(),
+                    ),
+                  );
+
+                  response.fold(
+                    (l) {
+                      var snackBar = SnackBar(content: Text(l));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    },
+                    (r) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RootScreen()),
+                        (route) => false,
+                      );
+                    },
+                  );
+                },
+                title: 'Sign In'),
           ],
         ),
       ),
@@ -60,6 +95,7 @@ class SignInScreen extends StatelessWidget {
 
   Widget _emailField(BuildContext context) {
     return TextField(
+      controller: _email,
       decoration: const InputDecoration(hintText: 'Enter Email')
           .applyDefaults(Theme.of(context).inputDecorationTheme),
     );
@@ -67,6 +103,7 @@ class SignInScreen extends StatelessWidget {
 
   Widget _passwordField(BuildContext context) {
     return TextField(
+      controller: _password,
       decoration: const InputDecoration(hintText: 'Enter Email')
           .applyDefaults(Theme.of(context).inputDecorationTheme),
     );
@@ -90,7 +127,7 @@ class SignInScreen extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SignupScreen(),
+                  builder: (context) => SignupScreen(),
                 ),
               );
             },

@@ -3,10 +3,19 @@ import 'package:flutter_svg/svg.dart';
 import 'package:spotify_flutter_bloc/common/widgets/appbar/basic_app_bar.dart';
 import 'package:spotify_flutter_bloc/common/widgets/button/basic_app_button.dart';
 import 'package:spotify_flutter_bloc/core/configs/assets/app_vectors.dart';
+import 'package:spotify_flutter_bloc/data/models/auth/create_user_request.dart';
+import 'package:spotify_flutter_bloc/domain/usecases/auth/sign_up.dart';
 import 'package:spotify_flutter_bloc/presentation/auth/pages/sign_in_screen.dart';
+import 'package:spotify_flutter_bloc/presentation/root/pages/root_screen.dart';
+
+import '../../../service_locator.dart';
 
 class SignupScreen extends StatelessWidget {
-  const SignupScreen({super.key});
+  SignupScreen({super.key});
+
+  final TextEditingController _fullName = TextEditingController();
+  final TextEditingController _email = TextEditingController();
+  final TextEditingController _password = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -20,8 +29,11 @@ class SignupScreen extends StatelessWidget {
         ),
         centerTitle: true,
       ),
-      body: Padding(
-        padding: const EdgeInsets.symmetric(vertical: 50, horizontal: 30),
+      body: SingleChildScrollView(
+        padding: const EdgeInsets.symmetric(
+          vertical: 50,
+          horizontal: 30,
+        ),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
@@ -41,7 +53,32 @@ class SignupScreen extends StatelessWidget {
             const SizedBox(
               height: 20,
             ),
-            BasicAppButton(onPressed: () {}, title: 'Create Account'),
+            BasicAppButton(
+                onPressed: () async {
+                  var result = await sl<SignUpUseCase>().call(
+                    params: CreateUserRequest(
+                      fullName: _fullName.text.toString(),
+                      email: _email.text.toString(),
+                      password: _password.text.toString(),
+                    ),
+                  );
+
+                  result.fold(
+                    (l) {
+                      var snackBar = SnackBar(content: Text(l));
+                      ScaffoldMessenger.of(context).showSnackBar(snackBar);
+                    },
+                    (r) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                            builder: (context) => const RootScreen()),
+                        (route) => false,
+                      );
+                    },
+                  );
+                },
+                title: 'Create Account'),
           ],
         ),
       ),
@@ -61,6 +98,7 @@ class SignupScreen extends StatelessWidget {
 
   Widget _fullNameField(BuildContext context) {
     return TextField(
+      controller: _fullName,
       decoration: const InputDecoration(hintText: 'Full Name')
           .applyDefaults(Theme.of(context).inputDecorationTheme),
     );
@@ -68,6 +106,7 @@ class SignupScreen extends StatelessWidget {
 
   Widget _emailField(BuildContext context) {
     return TextField(
+      controller: _email,
       decoration: const InputDecoration(hintText: 'Enter Email')
           .applyDefaults(Theme.of(context).inputDecorationTheme),
     );
@@ -75,6 +114,7 @@ class SignupScreen extends StatelessWidget {
 
   Widget _passwordField(BuildContext context) {
     return TextField(
+      controller: _password,
       decoration: const InputDecoration(hintText: 'Enter Email')
           .applyDefaults(Theme.of(context).inputDecorationTheme),
     );
@@ -98,7 +138,7 @@ class SignupScreen extends StatelessWidget {
               Navigator.pushReplacement(
                 context,
                 MaterialPageRoute(
-                  builder: (context) => const SignInScreen(),
+                  builder: (context) => SignInScreen(),
                 ),
               );
             },

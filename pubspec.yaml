@@ -22,10 +22,10 @@ dependencies:
   hydrated_bloc:
   path_provider:
   firebase_core:
-  #firebase_auth: ^5.1.4
+  firebase_auth:
+  get_it:
+  dartz:
   #cloud_firestore: ^5.2.1
-  #get_it: ^7.7.0
-  #dartz: ^0.10.1
   #just_audio: ^0.9.40
 
 dev_dependencies:

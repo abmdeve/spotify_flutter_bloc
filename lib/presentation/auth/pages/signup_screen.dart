@@ -6,9 +6,9 @@ import 'package:spotify_flutter_bloc/core/configs/assets/app_vectors.dart';
 import 'package:spotify_flutter_bloc/data/models/auth/create_user_request.dart';
 import 'package:spotify_flutter_bloc/domain/usecases/auth/sign_up.dart';
 import 'package:spotify_flutter_bloc/presentation/auth/pages/sign_in_screen.dart';
-import 'package:spotify_flutter_bloc/presentation/root/pages/root_screen.dart';
 
 import '../../../service_locator.dart';
+import '../../home/pages/home_screen.dart';
 
 class SignupScreen extends StatelessWidget {
   SignupScreen({super.key});
@@ -72,7 +72,7 @@ class SignupScreen extends StatelessWidget {
                       Navigator.pushAndRemoveUntil(
                         context,
                         MaterialPageRoute(
-                            builder: (context) => const RootScreen()),
+                            builder: (context) => const HomeScreen()),
                         (route) => false,
                       );
                     },
